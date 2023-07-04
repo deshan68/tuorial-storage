@@ -1,0 +1,13 @@
+expo-av: To work with video and audio in expo.
+firebase: To save data and files on the server.
+expo-dev-client: To work with third party libraries outside expo.
+expo-image-picker: to select images.
+@react-native-comunity/blur: effect of blur.
+
+npx expo install expo-av firebase expo-dev-client react-native-svg expo-image-picker  @react-native-community/blur
+npx expo prebuild
+npx expo run:ios
+
+
+
+https://codewithbeto.dev/projects/firebase-storage
