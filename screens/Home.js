@@ -17,7 +17,8 @@ const Home = () => {
   const [progress, setProgress] = useState(0);
   const [files, setFiles] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [isUploadCancel, setIsUploadCancel] = useState(false);
+  const [uploadTask, setUploadTask] = useState();
+
   const tempFile = [
     {
       createdAt: "2023-07-04T19:19:07.134Z",
@@ -94,22 +95,23 @@ const Home = () => {
       await uploadImage(result.assets[0].uri, "video");
     }
   };
-  console.log(isUploadCancel);
+
   const uploadImage = async (uri, fileType) => {
     const response = await fetch(uri);
     const blob = await response.blob();
 
     const storageRef = ref(storage, "Stuff/" + new Date().getTime());
-    const uploadTask = uploadBytesResumable(storageRef, blob);
+    const _uploadTask = uploadBytesResumable(storageRef, blob);
+    setUploadTask(_uploadTask);
 
     //listen for event
-    uploadTask.on(
+    _uploadTask.on(
       "state_changed",
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Progress: " + progress + "% done");
-        setProgress(progress.toFixed());
+        console.log("Progress: " + progress.toFixed(2) + "% done");
+        setProgress(progress.toFixed(2));
       },
       (error) => {
         console.log(error);
@@ -139,13 +141,21 @@ const Home = () => {
     }
   }
 
+  const uploadCancelHandler = () => {
+    setUploadTask((prev) => {
+      return prev.cancel();
+    });
+    setUploadTask("");
+    setImage("");
+    setVideo("");
+    alert("upload canceled");
+  };
   return (
     <SafeAreaView
       style={{
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "gray",
       }}
     >
       {!isLoading ? (
@@ -223,7 +233,12 @@ const Home = () => {
         <Foundation name="photo" size={24} color="white" />
       </TouchableOpacity>
       {image || video ? (
-        <Uploading image={image} video={video} progress={progress} />
+        <Uploading
+          image={image}
+          video={video}
+          progress={progress}
+          uploadCancelHandler={uploadCancelHandler}
+        />
       ) : null}
     </SafeAreaView>
   );

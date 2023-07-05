@@ -4,7 +4,12 @@ import { BlurView } from "expo-blur";
 import Progress from "./Progress";
 import { Video } from "expo-av";
 
-export default function Uploading({ image, video, progress }) {
+export default function Uploading({
+  image,
+  video,
+  progress,
+  uploadCancelHandler,
+}) {
   return (
     <View
       style={[
@@ -72,7 +77,7 @@ export default function Uploading({ image, video, progress }) {
             }}
           />
 
-          <TouchableOpacity style={{}}>
+          <TouchableOpacity style={{}} onPress={uploadCancelHandler}>
             <Text style={{ fontWeight: "500", color: "#3478f6", fontSize: 17 }}>
               Cancel
             </Text>
